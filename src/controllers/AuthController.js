@@ -1,5 +1,6 @@
 const User = require('../models/UserModel')
 const { promisify } = require('util')
+const Mail = require('../lib/Mail')
 
 class AuthController {
   async register (req, res) {
@@ -15,6 +16,12 @@ class AuthController {
       
       const token = await generateToken(user.id)
       
+      Mail.sendMail({
+        from: 'teste Queue <queue@queuetest.com.br>',
+        to: `${User.name} <${email}>`,
+        subject: 'Cadastro de usuario',
+        html: `Olá, ${User.name}, bem vindo ao sistema de filas`
+      })
       return res.send({
         user,
         token
